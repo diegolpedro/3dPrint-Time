@@ -1,0 +1,78 @@
+---
+title: "3dPrint Times"
+author: "Pedro Diego Leonardo"
+date: "4 de mayo de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Introducción
+### Objetivos
+Principalmente, el objetivo del siguiente trabajo es poder inferir tiempos de impresión 3d, mediante la entrega del archivo gcode próximo a imprimir, al modelo generado.
+Los objetivos secundarios, al ser el primero que hago de este tipo, es aplicar contenidos aprendidos y desde ya aprender nuevos.
+
+Todo el código utilizado en este trabajo, será compartido en mi GitHub bajo licencia GPLv3. 
+
+### Breve marco teórico
+<b>Impresión 3D</b>
+Cuando hablo de impresion 3d, me refiero específicamente a sistemas FDM.
+
+FDM (Fused Deposition Modeling)  
+"El modelado por deposición fundida utiliza una técnica aditiva, depositando el material en capas, para conformar la pieza. Un filamento plástico o metálico que inicialmente se almacena en rollos, es introducido en una boquilla. La boquilla se encuentra por encima de la temperatura de fusión del material y puede desplazarse en tres ejes controlada electrónicamente."  
+<https://es.wikipedia.org/wiki/Modelado_por_deposici%C3%B3n_fundida>
+
+G-CODE  
+"G-code es un lenguaje mediante el cual las personas pueden decir a máquinas o herramienta controladas por computadora, qué hacer y cómo hacerlo."  
+<https://es.wikipedia.org/wiki/G-code>  
+
+A saber, es que el tiempo de impresión de estos sistemas se ve muy afectado por ciertos parámetros. En algunos casos, me atrevo a decir que de forma exponencial.
+Es allí donde encuentro de mayor interés poder inferir los tiempos con la mayor precisión.
+
+## Datos
+### Obtención y preparación de los datos a analizar
+Como comente anteriormente, los datos que intento utilizar provienen de los archivos gcode impresos hasta el momento. Todos ellos fueron guardados y en su mayoría se registraron los tiempos finales de impresión.
+¿Que información tienen los archivos gcode? Para mi sorpresa no solo tienen todas las ordenes para la máquina, sino que también almacenan en forma de comentario, los parámetros elegidos para la impresión. Ej: espesor de capa, velocidades de cabezal, etc.
+Para mas info, <http://reprap.org/wiki/G-code/es>
+
+Ahora, lo que necesito para poder armar un modelo en R no son los gcode crudos, sino armar un set de datos a partir de ellos.
+¿Que quisiera filtrar? Me interesa toda aquella etiqueta relacionada con movimientos, velocidades, aceleraciones, etc. Ahora, ¿cuáles son esas etiquetas? Lo primero que se me viene a la mente es utilizar un programa para analizarlos. Yo elegí gCodeViewer <http://gcode.ws/>, pero podría ser cualquiera.
+
+A partir de utilizar el software, se aprecia que dos etiquetas de movimiento son las más frecuentes. G1 representa movimiento de cabezal, y M204 que representa valor de aceleración.
+Son estas etiquetas las que voy a capturar.
+G0 & G1: Move 
+M204: Set default acceleration 
+
+Otros datos útiles a extraer (solo los que me parecieron relevantes) del Gcode, vienen en forma de comentarios y son los siguientes:
+-filament used: cantidad de filamento utilizado.
+-filament_type: material del filamento.
+-default_acceleration: aceleración por default.
+-travel_speed: velocidad del cabezal en traslados.
+-layer_height: espesor de capa.
+-support_material: flag para soportes.
+-infill_speed: velocidad de relleno.
+-fill_density: densidad de relleno.
+-fill_pattern: patrón de relleno.
+-nozzle_diameter: diámetro de la boquilla.
+
+Para hacer la extracción utilizare un sencillo programa en python que reciba todos los archivos de un directorio, filtre los campos que necesito y cuente las etiquetas previamente comentadas.
+
+```{r cars}
+summary(cars)
+```
+
+Posible inclusión de campos.
+-first_layer_acceleration: aceleracion para la primer capa.
+-first_layer_speed: velocidad de primer capa.
+-first_layer_height: espesor de la primer capa.
+-infill_acceleration: aceleracion al hacer relleno.
+-perimeter_acceleration: aceleracion en los perimetros de la pieza.
+-slowdown_below_layer_time (Me gustaria saber bien a que refiere)
+-support_material_speed: velocidad de extrusion de soportes.
+-bottom_solid_layers: cantidad de capas solidas inferiores.
+-top_solid_layers: cantidad de capas solidas superiores.
+-top_solid_infill_speed: velocidad de capas solidas superiores.
+-external_perimeter_speed: velocidad de perimetro.
+-perimeter_speed: velocidad de perimetro (que diferencia con external_perimeter_speed).
+-solid_infill_speed: velocidad de relleno de sólidos.
