@@ -5,7 +5,7 @@
 # Versiones                                                                   #
 # 1.0 = Version funcional. Solo muestra salida, no genera todavia el csv.     #
 ###############################################################################
-version = 1.0
+version = 1.1
 
 import sys	    # Para argumentos.
 import re       # Regular expresions.
@@ -24,6 +24,8 @@ files = commands.getoutput('ls '+folder_name).split()
                           # Leemos contenido de directorio y separamos
                           # el resultado en forma de array.
                           # [file1, file2, ..., filen]
+
+file_out = open('output.csv', w)
 
 for file_name in files:   # Recorremos archivos.
   
@@ -47,3 +49,7 @@ for file_name in files:   # Recorremos archivos.
   print "Cantidad de Lineas: "+str(cantLine)
   print "Cantidad de G1: "+str(cantG1)
   print "Cantidad de M204: "+str(cantM204)
+  lineaCsv = file_name+','+cantLine+','+cantG1+','+cantM204
+  file_out.write(lineaCsv)
+  
+
