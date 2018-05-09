@@ -4,10 +4,11 @@
 #                                                  Para:  3dClassicParts      #
 # Versiones                                                                   #
 # 1.0 = Version funcional. Solo muestra salida, no genera todavia el csv.     #
+# 1.1 = Agregado de escritura en CSV.                                         #
 ###############################################################################
 version = 1.1
 
-import sys	    # Para argumentos.
+import sys	# Para argumentos.
 import re       # Regular expresions.
 import commands # Permite ejecutar comandos.
 
