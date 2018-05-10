@@ -8,61 +8,68 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-## Introducción
+## IntroducciÃ³n
 ### Objetivos
-Principalmente, el objetivo del siguiente trabajo es poder inferir tiempos de impresión 3d, mediante la entrega del archivo gcode próximo a imprimir, al modelo generado.
+Principalmente, el objetivo del siguiente trabajo es poder inferir tiempos de impresiÃ³n 3d, mediante la entrega del archivo gcode prÃ³ximo a imprimir, al modelo generado.
 Los objetivos secundarios, al ser el primero que hago de este tipo, es aplicar contenidos aprendidos y desde ya aprender nuevos.
 
-Todo el código utilizado en este trabajo, será compartido en mi GitHub bajo licencia GPLv3. 
+Todo el cÃ³digo utilizado en este trabajo, serÃ¡ compartido en mi GitHub bajo licencia GPLv3. 
 
-### Breve marco teórico
-<b>Impresión 3D</b>
-Cuando hablo de impresion 3d, me refiero específicamente a sistemas FDM.
+### Breve marco teÃ³rico
+<b>ImpresiÃ³n 3D</b>
+Cuando hablo de impresion 3d, me refiero especÃ­ficamente a sistemas FDM.
 
 FDM (Fused Deposition Modeling)  
-"El modelado por deposición fundida utiliza una técnica aditiva, depositando el material en capas, para conformar la pieza. Un filamento plástico o metálico que inicialmente se almacena en rollos, es introducido en una boquilla. La boquilla se encuentra por encima de la temperatura de fusión del material y puede desplazarse en tres ejes controlada electrónicamente."  
+"El modelado por deposiciÃ³n fundida utiliza una tÃ©cnica aditiva, depositando el material en capas, para conformar la pieza. Un filamento plÃ¡stico o metÃ¡lico que inicialmente se almacena en rollos, es introducido en una boquilla. La boquilla se encuentra por encima de la temperatura de fusiÃ³n del material y puede desplazarse en tres ejes controlada electrÃ³nicamente."  
 <https://es.wikipedia.org/wiki/Modelado_por_deposici%C3%B3n_fundida>
 
 G-CODE  
-"G-code es un lenguaje mediante el cual las personas pueden decir a máquinas o herramienta controladas por computadora, qué hacer y cómo hacerlo."  
+"G-code es un lenguaje mediante el cual las personas pueden decir a mÃ¡quinas o herramienta controladas por computadora, quÃ© hacer y cÃ³mo hacerlo."  
 <https://es.wikipedia.org/wiki/G-code>  
 
-A saber, es que el tiempo de impresión de estos sistemas se ve muy afectado por ciertos parámetros. En algunos casos, me atrevo a decir que de forma exponencial.
-Es allí donde encuentro de mayor interés poder inferir los tiempos con la mayor precisión.
+A saber, es que el tiempo de impresiÃ³n de estos sistemas se ve muy afectado por ciertos parÃ¡metros. En algunos casos, me atrevo a decir que de forma exponencial.
+Es allÃ­ donde encuentro de mayor interÃ©s poder inferir los tiempos con la mayor precisiÃ³n.
 
 ## Datos
-### Obtención y preparación de los datos a analizar
-Como comente anteriormente, los datos que intento utilizar provienen de los archivos gcode impresos hasta el momento. Todos ellos fueron guardados y en su mayoría se registraron los tiempos finales de impresión.
-¿Que información tienen los archivos gcode? Para mi sorpresa no solo tienen todas las ordenes para la máquina, sino que también almacenan en forma de comentario, los parámetros elegidos para la impresión. Ej: espesor de capa, velocidades de cabezal, etc.
+### ObtenciÃ³n y preparaciÃ³n de los datos a analizar
+Como comente anteriormente, los datos que intento utilizar provienen de los archivos gcode impresos hasta el momento. Todos ellos fueron guardados y en su mayorÃ­a se registraron los tiempos finales de impresiÃ³n.
+Â¿Que informaciÃ³n tienen los archivos gcode? Para mi sorpresa no solo tienen todas las ordenes para la mÃ¡quina, sino que tambiÃ©n almacenan en forma de comentario, los parÃ¡metros elegidos para la impresiÃ³n. Ej: espesor de capa, velocidades de cabezal, etc.
 Para mas info, <http://reprap.org/wiki/G-code/es>
 
 Ahora, lo que necesito para poder armar un modelo en R no son los gcode crudos, sino armar un set de datos a partir de ellos.
-¿Que quisiera filtrar? Me interesa toda aquella etiqueta relacionada con movimientos, velocidades, aceleraciones, etc. Ahora, ¿cuáles son esas etiquetas? Lo primero que se me viene a la mente es utilizar un programa para analizarlos. Yo elegí gCodeViewer <http://gcode.ws/>, pero podría ser cualquiera.
+Â¿Que quisiera filtrar? Me interesa toda aquella etiqueta relacionada con movimientos, velocidades, aceleraciones, etc. Ahora, Â¿cuÃ¡les son esas etiquetas? Lo primero que se me viene a la mente es utilizar un programa para analizarlos. Yo elegÃ­ gCodeViewer <http://gcode.ws/>, pero podrÃ­a ser cualquiera.
 
-A partir de utilizar el software, se aprecia que dos etiquetas de movimiento son las más frecuentes. G1 representa movimiento de cabezal, y M204 que representa valor de aceleración.
+A partir de utilizar el software, se aprecia que dos etiquetas de movimiento son las mÃ¡s frecuentes. G1 representa movimiento de cabezal, y M204 que representa valor de aceleraciÃ³n.
 Son estas etiquetas las que voy a capturar.
 G0 & G1: Move 
 M204: Set default acceleration 
 
-Otros datos útiles a extraer (solo los que me parecieron relevantes) del Gcode, vienen en forma de comentarios y son los siguientes:
+Otros datos Ãºtiles a extraer (solo los que me parecieron relevantes) del Gcode, vienen en forma de comentarios y son los siguientes:
 -filament used: cantidad de filamento utilizado.
 -filament_type: material del filamento.
--default_acceleration: aceleración por default.
+-default_acceleration: aceleraciÃ³n por default.
 -travel_speed: velocidad del cabezal en traslados.
 -layer_height: espesor de capa.
 -support_material: flag para soportes.
 -infill_speed: velocidad de relleno.
 -fill_density: densidad de relleno.
--fill_pattern: patrón de relleno.
--nozzle_diameter: diámetro de la boquilla.
+-fill_pattern: patrÃ³n de relleno.
+-nozzle_diameter: diÃ¡metro de la boquilla.
 
-Para hacer la extracción utilizare un sencillo programa en python que reciba todos los archivos de un directorio, filtre los campos que necesito y cuente las etiquetas previamente comentadas.
+Para hacer la extracciÃ³n utilizarÃ© un sencillo script en python que reciba todos los archivos de un directorio, filtre los campos que necesito de cada uno y cuente las etiquetas previamente comentadas. Todo esto serÃ¡ enviado a un archivo csv, para poder importarlo en R con facilidad.
 
-```{r cars}
-summary(cars)
+#### Script
+<a href="https://github.com/diegolpedro/3dPrint-Time/tree/master/python">gcToCsv.py</a>
+
+```{python gcToCsv}
+$ ./gcToCsv.py <gcode_directory_path>
 ```
+La salida de este script es llamada output.csv y un ejemplo de la misma puede ser encontrada en el mismo directorio.
+Con esto ya tengo la informacion que necesito de los archivos gcode. Ahora lo que me faltaria, son los tiempos de impresiÃ³n insumidos en cada caso.
+Estos tiempos fueron anotados en una planilla google docs y seran exportados a csv para poder corregirlos en formato.
 
-Posible inclusión de campos.
+
+Posible inclusiÃ³n de campos.
 -first_layer_acceleration: aceleracion para la primer capa.
 -first_layer_speed: velocidad de primer capa.
 -first_layer_height: espesor de la primer capa.
@@ -75,4 +82,4 @@ Posible inclusión de campos.
 -top_solid_infill_speed: velocidad de capas solidas superiores.
 -external_perimeter_speed: velocidad de perimetro.
 -perimeter_speed: velocidad de perimetro (que diferencia con external_perimeter_speed).
--solid_infill_speed: velocidad de relleno de sólidos.
+-solid_infill_speed: velocidad de relleno de sÃ³lidos.
