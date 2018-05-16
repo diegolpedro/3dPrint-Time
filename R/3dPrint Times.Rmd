@@ -35,7 +35,7 @@ Como comente anteriormente, los datos que intento utilizar provienen de los arch
 Para mas info <http://reprap.org/wiki/G-code/es>
 
 Ahora, lo que necesito para poder armar un modelo en R no son los gcode crudos, sino armar un set de datos a partir de ellos.
-¿Que quisiera filtrar? Me interesa toda aquella etiqueta relacionada con movimientos, velocidades, aceleraciones, etc. Ahora, ¿cuáles son esas etiquetas? Lo primero que se me viene a la mente es utilizar un programa para analizarlos. Yo elegí gCodeViewer <http://gcode.ws/> pero podría ser cualquiera.
+¿Que quisiera filtrar? Me interesa toda aquella etiqueta relacionada con movimientos, velocidades, aceleraciones, etc. Ahora, ¿cuáles son esas etiquetas? Lo primero que se me viene a la mente es utilizar un programa para analizarlos. Yo elegí <a href="http://gcode.ws/"> gCodeViewer </a> pero podría ser cualquiera.
 
 A partir de utilizar el software, se aprecia que dos etiquetas de movimiento son las más frecuentes. G1 representa movimiento de cabezal, y M204 que representa valor de aceleración.
 Son estas etiquetas las que voy a capturar.
@@ -64,18 +64,27 @@ La salida de este script es llamada output.csv y un ejemplo de la misma puede se
 Con esto ya tengo la informacion que necesito de los archivos gcode. Ahora lo que me faltaria, son los tiempos de impresión insumidos en cada caso.
 Estos tiempos fueron anotados en una planilla google docs y seran exportados a csv para poder corregirlos en formato.
 
+### Veamos que tenemos hasta el momento.  
+Para eso cargamos en R los set de datos.
+```{r eval=TRUE}
+# Seteamos el directorio de trabajo.
+setwd("~/GitHub/3dPrint-Time/R")
+#Cargo datos de tiempo desde los csv.
+tiempos <- read.csv2("../csv/tiempos.csv", header=TRUE, sep=";")
+#Cargo datos de parametros desde los csv.
+parametros <- read.csv2("../python/output.csv", header=TRUE, sep=";")
+```
 
-Posible inclusión de campos.
--first_layer_acceleration: aceleracion para la primer capa.
--first_layer_speed: velocidad de primer capa.
--first_layer_height: espesor de la primer capa.
--infill_acceleration: aceleracion al hacer relleno.
--perimeter_acceleration: aceleracion en los perimetros de la pieza.
--slowdown_below_layer_time (Me gustaria saber bien a que refiere)
--support_material_speed: velocidad de extrusion de soportes.
--bottom_solid_layers: cantidad de capas solidas inferiores.
--top_solid_layers: cantidad de capas solidas superiores.
--top_solid_infill_speed: velocidad de capas solidas superiores.
--external_perimeter_speed: velocidad de perimetro.
--perimeter_speed: velocidad de perimetro (que diferencia con external_perimeter_speed).
--solid_infill_speed: velocidad de relleno de sólidos.
+Una vez cargados veamos que formato tienen. Columnas y demas.
+```{r eval=TRUE}
+# Visualizamos los tiempos.
+head(tiempos)
+
+# Visualizamos los parametros.
+head(parametros)
+
+# Veamos como se distribuyen los tiempos.
+#boxplot( datos_tiempo["print_time"], 
+#         main = "Tiempos de Impresion", 
+#         col=2) 
+```
