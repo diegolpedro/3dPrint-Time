@@ -43,3 +43,5 @@ id,filename,cantG1,cantM204,filament_type,default_acceleration,travel_speed,laye
 42,Soporte_iPhoneSE_v3_PLA010_HI10.gcode,177673,14505,PLA,1000,100,0.1,60,60,10,honeycomb,0.4
 43,Spool-holder.gcode,304412,16467,ABS,1000,120,0.35,60,60,30,honeycomb,0.4
 44,tapa_orbital_020.gcode,16484,1053,PLA,1000,100,0.1,60,60,10,honeycomb,0.4
+45,Tapon_ABS015.gcode,29125,1161,ABS,1000,80,0.15,60,60,20,cubic,0.4
+46,TaponV2_ABS015.gcode,29300,1001,ABS,1000,80,0.15,60,60,20,cubic,0.4
