@@ -7,7 +7,9 @@ Este estudio consiste en tomar datos de archivos gcode (arhivos enviados a la im
 Luego de analizados se generara un modelo, considerado el mas adecuado, para inferencia de tiempos de impresion. En una segunda instancia este modelo sera implementado como API de servicio.
 
 ### ¿Como colaborar?
-Tienes una idea, una sugerencia, quieres compartir hardware o lineas de codigo? Todos los aportes son bienvenidos en pos de conseguir un producto final de primer nivel. Mas adelante dare los detalles como hacerlo de manera correcta.
+Tienes una idea, una sugerencia, quieres compartir hardware o lineas de codigo? 
+Todos los aportes son bienvenidos!! Puedo conseguir un mejor producto final con tu ayuda. Si quieres enviarme archivos gcode puedes hacerlo tambien por el mismo medio y adjuntar los tiempos insumidos en cada caso.
+Para todo esto y mas, envianos un mail a <3dclassicparts@gmail.com>
 
 ### Autor
 * **Pedro Diego** - *Inicio de proyecto* - [3DClassicParts](https://github.com/3dclassicparts)
