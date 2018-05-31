@@ -8,7 +8,7 @@ Luego de analizados se generara un modelo, considerado el mas adecuado, para inf
 
 ### ¿Como colaborar?
 Tienes una idea, una sugerencia, quieres compartir hardware o lineas de codigo? 
-Todos los aportes son bienvenidos!! Puedo conseguir un mejor producto final con tu ayuda. Si quieres enviarme archivos gcode puedes hacerlo tambien por el mismo medio y adjuntar los tiempos insumidos en cada caso.
+Todos los aportes son bienvenidos!! Puedo conseguir un mejor producto final con tu ayuda. Si quieres enviarme archivos gcode puedes hacerlo tambien por el mismo medio y adjuntar los tiempos insumidos en cada caso.  
 Para todo esto y mas, envianos un mail a <3dclassicparts@gmail.com>
 
 ### Autor
